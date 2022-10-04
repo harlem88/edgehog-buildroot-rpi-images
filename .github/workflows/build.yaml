@@ -1,0 +1,49 @@
+name: "Buildroot + Rauc + Edgehog RaspberryPi4 Image Release"
+on:
+  push:
+    tags:
+      - '*'
+
+jobs:
+  build-rpi-image:
+    runs-on: ubuntu-latest
+    steps:
+      # - name: Install dependencies
+      #   run: |
+      #     sudo apt update
+      #     sudo apt-get install -y libudev-dev libsystemd-dev bmap-tools
+      # - name: Install toolchain
+      #   uses: actions-rs/toolchain@v1
+      #   with:
+      #     profile: minimal
+      #     toolchain: 1.58.1
+      #     override: true
+      # - name: Checkout buildroot
+      #   run: git clone --depth 1 --branch 2022.02.x --no-single-branch https://git.busybox.net/buildroot/ $GITHUB_WORKSPACE/buildroot      
+      # - name: Checkout br2rauc
+      #   uses: actions/checkout@v3
+      #   with:
+      #     repository: edgehog-device-manager/br2rauc
+      #     path: ./br2rauc
+      # - name: Check out edgehog-buildroot-packages
+      #   uses: actions/checkout@v3
+      #   with:
+      #     repository: edgehog-device-manager/edgehog-buildroot-packages
+      #     path: ./edgehog-buildroot-packages     
+      - name: Build
+        run: echo ${{ github.sha }} > Release.txt        
+      - name: Build image
+        run: |        
+          mkdir output
+          mkdir artifact
+          echo "release_date=$(date '+%Y%m%d%H%M%S')" >> $GITHUB_ENV
+      - name: Compress image
+        run: |        
+          tar -zcvf BR2-RAUC-EDGEHOG-${{ env.release_date }}.tar.gz artifact
+          ls     
+        shell: bash
+      - name: Release
+        uses: softprops/action-gh-release@v1
+        with:
+          files: BR2-RAUC-EDGEHOG-${{ env.release_date }}.tar.gz
+          fail_on_unmatched_files: true    
