@@ -19,7 +19,7 @@ jobs:
           toolchain: 1.58.1
           override: true
       - name: Checkout buildroot
-        run: git clone --depth 1 --branch 2022.02.x --no-single-branch https://git.busybox.net/buildroot/ $GITHUB_WORKSPACE/buildroot      
+        run: git clone --depth 1 --branch 2022.08.1 --no-single-branch https://git.busybox.net/buildroot/ $GITHUB_WORKSPACE/buildroot
       - name: Checkout br2rauc
         uses: actions/checkout@v3
         with:
